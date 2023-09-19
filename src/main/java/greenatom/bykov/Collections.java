@@ -6,7 +6,10 @@ public class Collections {
 
     public static void main(String[] args) {
         listAnalysis();
+        reverseMapDisplay();
+    }
 
+    private static void reverseMapDisplay() {
         Map<String, Integer> originalMap = new HashMap<>();
         originalMap.put("one", 1);
         originalMap.put("two", 2);
