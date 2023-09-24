@@ -1,11 +1,18 @@
 package greenatom.bykov;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.*;
 
 public class Collections {
 
     public static void main(String[] args) {
-        listAnalysis();
+        try {
+            writeToFile(listAnalysis(),Collections.class.getDeclaredMethod("listAnalysis"));
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
         reverseMapDisplay();
     }
 
@@ -20,56 +27,91 @@ public class Collections {
     }
 
     public static <K, V> Map<V, K> reverseMap(Map<K, V> originalMap) {
-    Map<V, K> reversedMap = new HashMap<>();
-    for (Map.Entry<K, V> entry : originalMap.entrySet()) {
-        reversedMap.put(entry.getValue(), entry.getKey());
+        Map<V, K> reversedMap = new HashMap<>();
+        for (Map.Entry<K, V> entry : originalMap.entrySet()) {
+            reversedMap.put(entry.getValue(), entry.getKey());
+        }
+        return reversedMap;
     }
-    return reversedMap;
-}
-    public static void listAnalysis(){
+
+    @WriteToFile(filename = "test.txt")
+    public static List<String> listAnalysis() {
         List<Integer> arrayList = new ArrayList<>();
         List<Integer> linkedList = new LinkedList<>();
         Set<Integer> hashSet = new HashSet<>();
         Set<Integer> treeSet = new TreeSet<>();
-
-        List<Collection<Integer>> collections = List.of(arrayList,linkedList,hashSet,treeSet);
-        additionAnalysis(collections);
-        containsAnalysis(collections);
-        removalAnalysis(collections);
+        List<String> messages = new ArrayList<>();
+        List<Collection<Integer>> collections =
+                List.of(arrayList, linkedList, hashSet, treeSet);
+        messages.addAll(additionAnalysis(collections));
+        messages.addAll(containsAnalysis(collections));
+        messages.addAll(removalAnalysis(collections));
+        return messages;
     }
 
-    private static void removalAnalysis(List<Collection<Integer>> collections) {
-        long start,end;
-        for (Collection<Integer> collection: collections) {
+    private static List<String> removalAnalysis(List<Collection<Integer>> collections) {
+        long start, end;
+        List<String> messages = new ArrayList<>();
+        for (Collection<Integer> collection : collections) {
             start = System.nanoTime();
             collection.remove(50000);
             end = System.nanoTime();
-            System.out.println(collection.getClass().getSimpleName()+
-                    " add time: " + (end - start) + " ns");
+            String msg = collection.getClass().getSimpleName() +
+                    " remove time: " + (end - start) + " ns";
+            System.out.println(msg);
+            messages.add(msg);
         }
+        messages.add("-");
+        return messages;
     }
 
-    private static void containsAnalysis(List<Collection<Integer>> collections) {
-        long start,end;
-        for (Collection<Integer> collection: collections) {
+    private static List<String> containsAnalysis(List<Collection<Integer>> collections) {
+        long start, end;
+        List<String> messages = new ArrayList<>();
+        for (Collection<Integer> collection : collections) {
             start = System.nanoTime();
-          collection.contains(50000);
+            collection.contains(50000);
             end = System.nanoTime();
-            System.out.println(collection.getClass().getSimpleName()+
-                    " add time: " + (end - start) + " ns");
+            String msg = collection.getClass().getSimpleName() +
+                    " contains time: " + (end - start) + " ns";
+            System.out.println(msg);
+            messages.add(msg);
         }
+        messages.add("-");
+        return messages;
     }
 
-    private static void additionAnalysis(List<Collection<Integer>> collections) {
-        long start,end;
-        for (Collection<Integer> collection: collections) {
+    private static List<String> additionAnalysis(List<Collection<Integer>> collections) {
+        long start, end;
+        List<String> messages = new ArrayList<>();
+        for (Collection<Integer> collection : collections) {
             start = System.nanoTime();
             for (int i = 0; i < 100000; i++) {
                 collection.add(i);
             }
             end = System.nanoTime();
-            System.out.println(collection.getClass().getSimpleName()+
-                    " add time: " + (end - start) + " ns");
+            String msg = collection.getClass().getSimpleName() +
+                    " add time: " + (end - start) + " ns";
+            System.out.println(msg);
+            messages.add(msg);
+        }
+        messages.add("-");
+        return messages;
+    }
+
+    public static void writeToFile( List<String >messages, Method method) {
+        if (method.isAnnotationPresent(WriteToFile.class)) {
+            WriteToFile annotation = method.getAnnotation(WriteToFile.class);
+            String path = annotation.filename();
+            try (FileWriter writer = new FileWriter(path)) {
+                for (String msg: messages
+                     ) {
+                    writer.write(msg+"\n");
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
