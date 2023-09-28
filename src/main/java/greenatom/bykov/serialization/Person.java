@@ -3,6 +3,7 @@ package greenatom.bykov.serialization;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 @Getter
@@ -12,6 +13,8 @@ public class Person implements Serializable {
     private int age;
     private transient String occupation;
 
+    @Serial
+    private static final long serialVersionUID = 1337L;
     public Person(String name, int age) {
         this.name = name;
         this.age = age;
