@@ -1,4 +1,4 @@
-package greenatom.bykov;
+package greenatom.bykov.exceptions;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;

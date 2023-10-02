@@ -1,17 +1,11 @@
-package greenatom.bykov;
+package greenatom.bykov.exceptions;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Exceptions {
     public static void main(String[] args) {
-        try {
-            arrayExceptionExample();
-        } catch (NoMoreElementsException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
 
-        }
         for (int i = 0; i < 2; i++) {
             try {
                 new MyException();//static init ar only throws once

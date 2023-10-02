@@ -1,4 +1,4 @@
-package greenatom.bykov;
+package greenatom.bykov.collections;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

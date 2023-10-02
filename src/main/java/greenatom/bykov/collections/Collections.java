@@ -1,4 +1,4 @@
-package greenatom.bykov;
+package greenatom.bykov.collections;
 
 import java.io.FileWriter;
 import java.io.IOException;
