@@ -12,7 +12,18 @@ import java.util.List;
 public enum CommandType implements Operation{
     CREATE{
         public void process(String path, String args){
-        new File(path);
+            File file = new File(Path.of(path).toUri());
+            if (file.exists()) {
+                System.out.println("Файл уже существует.");
+            } else {
+                try {
+                    file.createNewFile();
+                    System.out.println("Файл успешно создан.");
+                } catch (Exception e) {
+                    System.out.println("Ошибка при создании файла.");
+                    e.printStackTrace();
+                }
+            }
         }
     },
     READ{
